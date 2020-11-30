@@ -4,7 +4,7 @@ import re
 
 # Define test seeds and modifiers
 SEEDS = [
-    'dingles',
+    'nothing to replace',
     '%color shoes',
     '%type shoes',
     '%audience %color shoes',
@@ -32,14 +32,15 @@ MODIFIERS = {
 
 def _combine(seed: str, modifiers: dict) -> list:
     """Generate combinations for a single keyword."""
-    combinations = []
-    # 1. Replace placeholder in string with matching dict keys
-    mods_product = product(*modifiers.values())
-    # mods_product = zip([])
-    print([i for i in mods_product])
-    # 2. Append to `combinations` list
+    mods_product = [dict(zip(modifiers.keys(), p)) for p in product(*modifiers.values())]
+    combined = []
+    for combination in mods_product:
+        new_kw = seed
+        for key in combination.keys():
+            new_kw = new_kw.replace(f'%{key}', combination[key])
+        combined.append(new_kw)
 
-    return combinations
+    return combined
 
 
 def matrix(seeds: list, modifiers: dict):
@@ -49,9 +50,7 @@ def matrix(seeds: list, modifiers: dict):
         seed_vars = re.findall(r'%([\w-]+)', seed)
         mods_subset = {k: modifiers[k] for k in seed_vars}
         if len(mods_subset) > 0:
-            # combined_kws.extend(matrix(seed, modifiers))
-            _combine(seed, modifiers)
-            # combined_kws.append(seed)
+            combined_kws.extend(_combine(seed, mods_subset))
         else:
             combined_kws.append(seed)
 
