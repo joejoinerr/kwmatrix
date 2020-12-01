@@ -25,14 +25,14 @@ MODIFIERS = {
         'comfy'
     ],
     'audience': [
-        'womens',
+        ' womens',
         'mens',
         'kids'
     ]
 }
 
 
-def _subset_modifiers(seed: str, modifiers: dict, var_char=r'%') -> dict:
+def _subset_modifiers(seed: str, modifiers: dict, var_char: str) -> dict:
     lookup = var_char + r'([\w-]+)'
     seed_vars = re.findall(lookup, seed)
 
@@ -42,13 +42,13 @@ def _subset_modifiers(seed: str, modifiers: dict, var_char=r'%') -> dict:
     return mods_subset
 
 
-def _combine(seed: str, modifiers: dict, var_char=r'%'):
+def _combine(seed: str, modifiers: dict, var_char: str):
     mods_product = [dict(zip(modifiers.keys(), p)) for p in product(*modifiers.values())]
-    for combination in mods_product:
+    for vars_list in mods_product:
         # Use `reduce` to loop over the keyword several times and replace all variables
-        new_kw = reduce(lambda kw, var: kw.replace(var_char + var, combination[var]), combination, seed)
+        new_kw = reduce(lambda kw, var: kw.replace(var_char + var, vars_list[var].strip()), vars_list, seed)
 
-        yield new_kw
+        yield new_kw.strip()
 
 
 def matrix(seeds: list, modifiers: dict, var_char=r'%'):
