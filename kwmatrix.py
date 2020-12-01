@@ -32,6 +32,14 @@ MODIFIERS = {
 }
 
 
+def _subset_modifiers(seed: str, modifiers: dict, var_char=r'%') -> dict:
+    lookup = var_char + r'([\w-]+)'
+    seed_vars = re.findall(lookup, seed)
+    mods_subset = {k: modifiers[k] for k in seed_vars}
+
+    return mods_subset
+
+
 def _combine(seed: str, modifiers: dict) -> list:
     """Generate combinations for a single keyword."""
     mods_product = [dict(zip(modifiers.keys(), p)) for p in product(*modifiers.values())]
@@ -44,11 +52,10 @@ def _combine(seed: str, modifiers: dict) -> list:
 
 
 def matrix(seeds: list, modifiers: dict):
-    """Combine several lists of modifiers with a list of seed keywords."""
+    """Combine named modifier lists with a list of seed keywords containing variables."""
     combined_kws = []
     for seed in seeds:
-        seed_vars = re.findall(r'%([\w-]+)', seed)
-        mods_subset = {k: modifiers[k] for k in seed_vars}
+        mods_subset = _subset_modifiers(seed, modifiers)
         if len(mods_subset) > 0:
             combined_kws.extend(_combine(seed, mods_subset))
         else:
