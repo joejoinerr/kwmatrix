@@ -3,35 +3,6 @@ from itertools import product
 import re
 
 
-# Define test seeds and modifiers
-SEEDS = [
-    'nothing to replace',
-    '%color shoes',
-    '%type shoes',
-    '%audience %color shoes',
-    '%audience %type shoes',
-    '%audience %color %type shoes'
-]
-MODIFIERS = {
-    'color': [
-        'red',
-        'blue',
-        'green',
-        'grey'
-    ],
-    'type': [
-        'walking',
-        'running',
-        'comfy'
-    ],
-    'audience': [
-        ' womens',
-        'mens',
-        'kids'
-    ]
-}
-
-
 def _subset_modifiers(seed: str, modifiers: dict, var_char: str) -> dict:
     lookup = var_char + r'([\w-]+)'
     seed_vars = re.findall(lookup, seed)
@@ -63,7 +34,3 @@ def matrix(seeds: list, modifiers: dict, var_char=r'%'):
                 yield new_kw
         else:
             yield seed
-
-
-if __name__ == '__main__':
-    print(list(matrix(SEEDS, MODIFIERS)))
