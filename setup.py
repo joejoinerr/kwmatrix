@@ -13,5 +13,7 @@ setup(
     url='https://github.com/joejoinerr/kwmatrix',
     author='Joe Joiner',
     author_email='joe@legato.digital',
-    license='GPL'
+    license='GPL',
+    include_package_data=True,
+    packages=['kwmatrix']
 )
