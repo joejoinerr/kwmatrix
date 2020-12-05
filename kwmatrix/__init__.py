@@ -1,2 +1,2 @@
-from kwmatrix.kwmatrix import matrix
+import kwmatrix.kwmatrix
 __version__ = '1.0.0'
