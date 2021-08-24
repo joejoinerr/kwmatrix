@@ -6,7 +6,7 @@ README = (HERE / 'README.md').read_text()
 
 setup(
     name='kwmatrix',
-    version='1.0.1',
+    version='1.0.2',
     description='Combine keywords with several modifiers for SEO',
     long_description=README,
     long_description_content_type='text/markdown',
