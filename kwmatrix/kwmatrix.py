@@ -4,7 +4,8 @@ import re
 
 
 def _subset_modifiers(seed: str, modifiers: dict, var_char: str) -> dict:
-    lookup = var_char + r'([\w-]+)'
+    match = r'([\w-]+)'
+    lookup = f'{var_char}{match}'
     seed_vars = re.findall(lookup, seed)
 
     # Create a new subset dictionary where each modifier list is de-duplicated
@@ -14,11 +15,13 @@ def _subset_modifiers(seed: str, modifiers: dict, var_char: str) -> dict:
 
 
 def _combine(seed: str, modifiers: dict, var_char: str):
+    seed = seed.strip()
     mods_product = [dict(zip(modifiers.keys(), p)) for p in product(*modifiers.values())]
     for vars_list in mods_product:
         # Use `reduce` to loop over the keyword several times and replace all variables
         new_kw = reduce(lambda kw, var: kw.replace(var_char + var, vars_list[var].strip()), vars_list, seed)
         vars_list['keyword'] = new_kw.strip()
+        vars_list['seed'] = seed
 
         yield vars_list
 
@@ -35,4 +38,5 @@ def matrix(seeds: list, modifiers: dict, var_char=r'%'):
                 yield new_kw
         else:
             # Yield a dictionary to maintain consistency with combined keywords
-            yield {'keyword': seed}
+            seed = seed.strip()
+            yield {'keyword': seed, 'seed': seed}
